@@ -1,11 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/common/types/role.enum';
-import { CategoriesService } from './categories.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from "@nestjs/common";
+import { Roles } from "src/common/decorators/roles.decorator";
+import { Role } from "src/common/types/role.enum";
+import { CategoriesService } from "./categories.service";
 
-@Controller('categories')
+@Controller("categories")
 export class CategoriesController {
-    constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
   @Roles(Role.Admin, Role.Manager)
@@ -13,15 +21,18 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
-  @Put(':id')
+  @Put(":id")
   @Roles(Role.Admin, Role.Manager)
-  async updateCategory(@Param('id') id: string, @Body() updateCategoryDto: any) {
+  async updateCategory(
+    @Param("id") id: string,
+    @Body() updateCategoryDto: any,
+  ) {
     return this.categoriesService.update(id, updateCategoryDto);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @Roles(Role.Admin)
-  async deleteCategory(@Param('id') id: string) {
+  async deleteCategory(@Param("id") id: string) {
     return this.categoriesService.delete(id);
   }
 
@@ -31,4 +42,3 @@ export class CategoriesController {
     return this.categoriesService.findAll();
   }
 }
-

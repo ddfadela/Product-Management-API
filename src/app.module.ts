@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { config } from './config/config';
-import { UsersModule } from './user/users.module';
-import { AuthModule } from './auth/auth.module';
-import { ProductsModule } from './products/products.module';
-import { CategoriesModule } from './categories/categories.module';
+import { Module } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import { config } from "./config/config";
+import { UsersModule } from "./user/users.module";
+import { AuthModule } from "./auth/auth.module";
+import { ProductsModule } from "./products/products.module";
+import { CategoriesModule } from "./categories/categories.module";
 
 @Module({
   imports: [
@@ -14,9 +14,9 @@ import { CategoriesModule } from './categories/categories.module';
     UsersModule,
     AuthModule,
     ProductsModule,
-    CategoriesModule
+    CategoriesModule,
   ],
-  controllers:  [],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

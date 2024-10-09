@@ -1,5 +1,11 @@
-import { IsOptional, IsNumber, IsString, Min, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsOptional,
+  IsNumber,
+  IsString,
+  Min,
+  ValidateNested,
+} from "class-validator";
+import { Type } from "class-transformer";
 
 class FilterOptions {
   @IsOptional()
@@ -16,7 +22,6 @@ class FilterOptions {
   @Min(0)
   readonly maxPrice?: number;
 }
-
 
 export class FilterProductsDto {
   @IsOptional()
