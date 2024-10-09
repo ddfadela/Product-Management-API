@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './user.entity';
@@ -17,11 +17,11 @@ export class UsersService {
     async getUser(query: any ): Promise<User> {
         return this.userModel.findOne(query);
     }
-
-    async findAll(): Promise<UserDocument[]> {
-        return this.userModel.find().exec();
-      }
     
+    async findAll(): Promise<User[]> {
+        return this.userModel.find().exec();
+    }
+
     async findById(id: string): Promise<UserDocument> {
     return this.userModel.findById(id);
     }
@@ -46,4 +46,18 @@ export class UsersService {
         );
 
     }
+    async updateRole(id: string, newRole: string): Promise<User> {
+        const user = await this.userModel.findById(id);
+        if (!user) {
+          throw new BadRequestException('User not found');
+        }
+    
+        user.role = newRole;
+        return user.save();
+      }
+
+    async delete(id: string): Promise<any> {
+        return this.userModel.findByIdAndDelete(id);
+    }
+
 }
