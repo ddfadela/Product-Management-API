@@ -21,6 +21,9 @@ export class Product {
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
   category: Category | Types.ObjectId;
 
+  @Prop({ default: false }) 
+  deleted: boolean;
+
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

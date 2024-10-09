@@ -10,6 +10,9 @@ export class Category {
 
   @Prop()
   description: string;
+
+  @Prop({ default: false })
+  deleted: boolean;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

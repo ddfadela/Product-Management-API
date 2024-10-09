@@ -46,7 +46,7 @@ export class ProductsService {
   }
 
   async deleteProduct(id: string): Promise<Product> {
-    return this.productModel.findByIdAndDelete(id).exec();
+    return this.productModel.findByIdAndUpdate(id, { deleted: true }, { new: true }).exec();
   }
 
 }

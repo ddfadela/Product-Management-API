@@ -19,9 +19,9 @@ export class CategoriesService {
     }
   
     async delete(id: string): Promise<any> {
-      return this.categoryModel.findByIdAndDelete(id);
+        return this.categoryModel.findByIdAndUpdate(id, { deleted: true }, { new: true }).exec();
     }
-  
+    
     async findAll(): Promise<Category[]> {
       return this.categoryModel.find().exec();
     }
