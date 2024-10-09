@@ -3,11 +3,11 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { ProductsService } from './products.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/types/role.enum';
-import { Product } from './product.entity';
 import { FilterProductsDto } from './dto/filter-products.dto';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 
 @Controller('products')
-@UseGuards(RolesGuard)
+@UseGuards(AccessTokenGuard, RolesGuard) 
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
 
