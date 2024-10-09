@@ -10,6 +10,7 @@ import { UserEntity } from './user.entity';
 export class AuthService {
     constructor(
         private readonly usersService: UsersService, private jwtService: JwtService) { }
+        
     async validateUser(loginUserDto:LoginUserDto): Promise<any> {
         const {email,password}=loginUserDto
         const user = await this.usersService.getUser({email });

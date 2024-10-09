@@ -35,6 +35,8 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
   async refresh(@Body() body: { email: string; refreshToken: string }) {
-    return await this.authService.refreshAccessToken(body.email, body.refreshToken);
+    const {email,refreshToken}=body
+
+    return await this.authService.refreshAccessToken(email, refreshToken);
   }
 }
