@@ -1,4 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Product, ProductDocument } from "./product.entity";
@@ -13,8 +18,24 @@ export class ProductsService {
   ) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<Product> {
+    const existingProduct = await this.productModel.findOne({
+      name: createProductDto.name,
+    });
+
+    if (existingProduct) {
+      throw new BadRequestException("Product with this name already exists.");
+    }
+
     const createdProduct = new this.productModel(createProductDto);
-    return createdProduct.save();
+
+    try {
+      return await createdProduct.save();
+    } catch (error) {
+      console.error("Error creating product:", error);
+      throw new InternalServerErrorException(
+        "Error creating product. Please try again later.",
+      );
+    }
   }
 
   async getAllProducts(
@@ -58,9 +79,19 @@ export class ProductsService {
     });
   }
 
-  async deleteProduct(id: string): Promise<Product> {
-    return this.productModel
+  async deleteProduct(id: string): Promise<string> {
+    const existingProduct = await this.productModel.findOne({
+        _id:id
+    });
+
+    if (existingProduct) {
+      throw new NotFoundException("Product with this id not found.");
+    }
+
+    this.productModel
       .findByIdAndUpdate(id, { deleted: true }, { new: true })
       .exec();
+ 
+    return `Product with id ${id} deleted successfully`;
   }
 }

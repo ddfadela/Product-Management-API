@@ -1,4 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Category, CategoryDocument } from "./category.entity";
 import { Model } from "mongoose";
@@ -12,6 +16,13 @@ export class CategoriesService {
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    const existingCategory = await this.categoryModel.findOne({
+      name: createCategoryDto.name,
+    });
+
+    if (existingCategory) {
+      throw new BadRequestException("Category with this name already exists.");
+    }
     const newCategory = new this.categoryModel(createCategoryDto);
     return newCategory.save();
   }
@@ -25,10 +36,20 @@ export class CategoriesService {
     });
   }
 
-  async delete(id: string): Promise<any> {
-    return this.categoryModel
+  async delete(id: string): Promise<string> {
+    const existingCategory = await this.categoryModel.findOne({
+    __id:id
+    });
+
+    if (existingCategory) {
+      throw new NotFoundException("Category with this id not found.");
+    }
+
+    this.categoryModel
       .findByIdAndUpdate(id, { deleted: true }, { new: true })
       .exec();
+    
+    return `Category with id ${id} deleted successfully`;
   }
 
   async findAll(): Promise<Category[]> {

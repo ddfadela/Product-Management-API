@@ -1,14 +1,17 @@
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { Request } from "express";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { UsersService } from "src/user/users.service";
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
   "jwt-refresh",
 ) {
-  constructor() {
+  constructor(
+    @Inject(UsersService) private readonly usersService: UsersService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey:
@@ -18,8 +21,14 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(req: Request, payload: any) {
+  async validate(req: Request, payload: any) {
     const refreshToken = req.get("Authorization").replace("Bearer", "").trim();
+
+    const user = await this.usersService.findByEmail(payload.email);
+    if (!user || !user.refreshTokens.includes(refreshToken)) {
+      throw new UnauthorizedException("Refresh token is invalid or expired.");
+    }
+
     return { ...payload, refreshToken };
   }
 }

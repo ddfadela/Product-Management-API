@@ -44,11 +44,28 @@ export class UsersService {
   }
 
   async removeRefreshToken(email: string, refreshToken: string): Promise<void> {
-    const result = await this.userModel.updateOne(
-      { email },
-      { $pull: { refreshTokens: refreshToken } },
-    );
+    try {
+      const user = await this.userModel.findOne({ email });
+      if (!user) {
+        console.warn(`User with email ${email} not found`);
+        return;
+      }
+      const normalizedToken = refreshToken.trim();
+
+      if (!user.refreshTokens.includes(normalizedToken)) {
+        console.warn(`Refresh token not found for user: ${email}`);
+        return;
+      }
+
+      await this.userModel.updateOne(
+        { email },
+        { $pull: { refreshTokens: normalizedToken } },
+      );
+    } catch (error) {
+      console.error(`Error removing refresh token for email: ${email}`, error);
+    }
   }
+
   async updateRole(id: string, newRole: string): Promise<User> {
     const user = await this.userModel.findById(id);
     if (!user) {
@@ -59,7 +76,14 @@ export class UsersService {
     return user.save();
   }
 
-  async delete(id: string): Promise<any> {
-    return this.userModel.findByIdAndDelete(id);
+  async delete(id: string): Promise<string> {
+    const user = await this.userModel.findOne({_id:id });
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+      return;
+    }
+    await this.userModel.findByIdAndDelete(id);
+   
+    return `User with id ${id} deleted successfully`;
   }
 }
