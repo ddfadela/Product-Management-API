@@ -11,10 +11,10 @@ import { CategoriesModule } from "./categories/categories.module";
     MongooseModule.forRoot(config.mongodbUri, {
       dbName: config.dbName,
     }),
-    UsersModule,
     AuthModule,
-    ProductsModule,
+    UsersModule,
     CategoriesModule,
+    ProductsModule,
   ],
   controllers: [],
   providers: [],
