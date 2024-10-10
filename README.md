@@ -13,15 +13,13 @@ This is a NestJS application that provides an API for [Product Management API ]
    cd Product-Management-API
 Install the dependencies:
 
-  ```bash
-  npm install
+  $ npm install
 Set up your environment variables by creating a .env file based on the .env.example provided.
 
 Running the Application
 To run the application in development mode, use:
 
-  ```bash
-    npm run start:dev
+  $ npm run start:dev
 Accessing Swagger UI
 Once the application is running, you can access the Swagger UI documentation at:
 
