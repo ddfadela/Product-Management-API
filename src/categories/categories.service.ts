@@ -38,7 +38,7 @@ export class CategoriesService {
 
   async delete(id: string): Promise<string> {
     const existingCategory = await this.categoryModel.findOne({
-    __id:id
+      __id: id,
     });
 
     if (existingCategory) {
@@ -48,7 +48,7 @@ export class CategoriesService {
     this.categoryModel
       .findByIdAndUpdate(id, { deleted: true }, { new: true })
       .exec();
-    
+
     return `Category with id ${id} deleted successfully`;
   }
 

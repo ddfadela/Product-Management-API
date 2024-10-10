@@ -81,7 +81,7 @@ export class ProductsService {
 
   async deleteProduct(id: string): Promise<string> {
     const existingProduct = await this.productModel.findOne({
-        _id:id
+      _id: id,
     });
 
     if (existingProduct) {
@@ -91,7 +91,7 @@ export class ProductsService {
     this.productModel
       .findByIdAndUpdate(id, { deleted: true }, { new: true })
       .exec();
- 
+
     return `Product with id ${id} deleted successfully`;
   }
 }
