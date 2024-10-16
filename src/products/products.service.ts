@@ -44,7 +44,7 @@ export class ProductsService {
     const { filters, page = 1, limit = 10 } = filterProductsDto;
     const { category, minPrice, maxPrice } = filters || {};
 
-    const filter: any = {};
+    const filter: any = { deleted: false }; 
 
     // Filtering logic
     if (category) {
@@ -74,7 +74,20 @@ export class ProductsService {
     id: string,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    return this.productModel.findByIdAndUpdate(id, updateProductDto, {
+
+    const product = await this.productModel.findOne({
+      name: updateProductDto.name,
+    });
+
+    if (!product) {
+      throw new NotFoundException("This product does not exist");
+    }
+
+    if (product.deleted) {
+      throw new BadRequestException("Product is already deleted.");
+    }
+
+    return await this.productModel.findByIdAndUpdate(id, updateProductDto, {
       new: true,
     });
   }
@@ -88,7 +101,11 @@ export class ProductsService {
       throw new NotFoundException("Product with this id not found.");
     }
 
-    this.productModel
+    if (existingProduct.deleted) {
+      throw new BadRequestException("Product is already deleted.");
+    }
+
+    await this.productModel
       .findByIdAndUpdate(id, { deleted: true }, { new: true })
       .exec();
 
