@@ -54,7 +54,7 @@ export class AuthService {
       role,
     });
 
-    return this.login({ email, password: hashedPassword });
+    return await this.login({ email, password: hashedPassword });
   }
 
   async logout(email: string, refreshToken: string): Promise<void> {

@@ -15,25 +15,25 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    return this.userModel.create({
+    return await this.userModel.create({
       ...createUserDto,
     });
   }
 
   async getUser(query: any): Promise<User> {
-    return this.userModel.findOne(query);
+    return await this.userModel.findOne(query);
   }
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return await this.userModel.find().exec();
   }
 
   async findById(id: string): Promise<UserDocument> {
-    return this.userModel.findById(id);
+    return await this.userModel.findById(id);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email });
+    return await this.userModel.findOne({ email });
   }
 
   async storeRefreshToken(email: string, refreshToken: string): Promise<void> {
@@ -73,7 +73,7 @@ export class UsersService {
     }
 
     user.role = newRole;
-    return user.save();
+    return await user.save();
   }
 
   async delete(id: string): Promise<string> {

@@ -11,6 +11,8 @@ This is a NestJS application that provides an API for [Product Management API ]
    ```bash
    git clone https://github.com/ddfadela/Product-Management-API.git
    cd Product-Management-API
+Install the dependencies:
+
 ```bash
 $ npm install
 ```

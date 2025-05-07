@@ -24,14 +24,26 @@ export class CategoriesService {
       throw new BadRequestException("Category with this name already exists.");
     }
     const newCategory = new this.categoryModel(createCategoryDto);
-    return newCategory.save();
+    return await newCategory.save();
   }
 
   async update(
     id: string,
     updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
-    return this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {
+    const category = await this.categoryModel.findOne({
+      name: updateCategoryDto.name,
+    });
+
+    if (!category) {
+      throw new NotFoundException("This category does not exist");
+    }
+
+    if (category.deleted) {
+      throw new BadRequestException("Category is already deleted.");
+    }
+    
+    return await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {
       new: true,
     });
   }
@@ -44,8 +56,11 @@ export class CategoriesService {
     if (existingCategory) {
       throw new NotFoundException("Category with this id not found.");
     }
+    if (existingCategory.deleted ){
+      throw new BadRequestException("Category is already deleted.");
+    }
 
-    this.categoryModel
+    await this.categoryModel
       .findByIdAndUpdate(id, { deleted: true }, { new: true })
       .exec();
 
@@ -53,6 +68,6 @@ export class CategoriesService {
   }
 
   async findAll(): Promise<Category[]> {
-    return this.categoryModel.find().exec();
+    return await this.categoryModel.find({deleted:false}).exec();
   }
 }
